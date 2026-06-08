@@ -1705,22 +1705,28 @@ function showPushToast(msg, type){
 
 document.getElementById('btn-gist-push').addEventListener('click', async ()=>{
   const cfg = getGistConfig();
-  // Si no hay token guardado, abrir modal para configurar
   if(!cfg.token){ openGistModal('push'); return; }
-  // Si hay token → subir automáticamente sin modal
   const btn = document.getElementById('btn-gist-push');
+  const orig = btn.textContent;
   btn.textContent = '↑ Subiendo…';
   btn.disabled = true;
+  btn.style.background = '';
+  btn.style.color = '';
   try{
     const newId = await gistPush(cfg.token, cfg.id);
     localStorage.setItem('gist_id', newId);
     modified = false;
     document.getElementById('mod-pill').classList.remove('show');
-    showPushToast('✓ Guardado en Gist', 'ok');
+    btn.textContent = '✓ Guardado';
+    btn.style.background = 'var(--green-bg)';
+    btn.style.color = 'var(--green)';
   } catch(err){
-    showPushToast('✗ ' + err.message, 'err');
-    // Si el error es de auth, abrir modal para reconfigurar
+    btn.textContent = '✗ Error';
+    btn.style.background = 'var(--red-bg)';
+    btn.style.color = 'var(--red)';
     if(err.message.includes('401')) openGistModal('push');
+  } finally{
+    setTimeout(()=>{ btn.textContent=orig; btn.style.background=''; btn.style.color=''; btn.disabled=false; }, 2500);
   }
 });
 
