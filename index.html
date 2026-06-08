@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gantt Obras</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1117;
+    --surface: #161b27;
+    --surface2: #1e2535;
+    --border: #2a3245;
+    --text: #e8eaf0;
+    --text2: #8b95aa;
+    --text3: #4a5568;
+    --green: #4ade80;
+    --green-dim: #22c55e;
+    --blue: #60a5fa;
+    --blue-dim: #3b82f6;
+    --accent: #f59e0b;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  /* Glow top */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(96,165,250,.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .wrapper {
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--blue-dim), var(--green-dim));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .logo-text {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text2);
+    font-family: 'DM Mono', monospace;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: -.02em;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 40px;
+  }
+
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all .2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 60%, rgba(255,255,255,.02));
+    pointer-events: none;
+  }
+
+  .card:hover {
+    border-color: var(--blue-dim);
+    background: var(--surface2);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.3);
+  }
+
+  .card:hover .arrow {
+    transform: translateX(4px);
+    color: var(--blue);
+  }
+
+  .card-dot {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .card-dot.blue { background: rgba(96,165,250,.12); }
+  .card-dot.green { background: rgba(74,222,128,.12); }
+
+  .card-info {
+    flex: 1;
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+
+  .card-desc {
+    font-size: 11px;
+    color: var(--text2);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .arrow {
+    color: var(--text3);
+    font-size: 18px;
+    transition: all .2s;
+    flex-shrink: 0;
+  }
+
+  .footer {
+    margin-top: 32px;
+    font-size: 10px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    text-align: center;
+    letter-spacing: .06em;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="logo">
+    <div class="logo-icon">📊</div>
+    <span class="logo-text">Planificación de obras</span>
+  </div>
+
+  <h1>Gestión de<br>Proyectos</h1>
+  <p class="subtitle">Selecciona la obra para abrir su Gantt</p>
+
+  <div class="cards">
+    <a class="card" href="massamagrell.html">
+      <div class="card-dot blue">🏗</div>
+      <div class="card-info">
+        <div class="card-title">Massamagrell</div>
+        <div class="card-desc">Residencial Torre Ponent</div>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+
+    <a class="card" href="alcasser.html">
+      <div class="card-dot green">🏗</div>
+      <div class="card-info">
+        <div class="card-title">Alcàsser</div>
+        <div class="card-desc">Gantt interactivo</div>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <div class="footer">rafasena63 · github.io/Gantt-Obras</div>
+</div>
+</body>
+</html>
