@@ -190,7 +190,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
       <div class="subtitle">Alcàsser</div>
     </div>
     <div class="topbar-right">
-      <span class="pill mod" id="mod-pill" style="">● MODIFICADO</span>
+      <span class="pill mod" id="mod-pill">● MODIFICADO</span>
       <span id="last-saved" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap">Guardado: 9/6/2026 18:03</span>
       <button class="btn" id="btn-lock" title="Bloquear edición" style="font-size:13px">🔓</button>
       <button class="btn" id="btn-group" style="">⊞ Agrupar selección</button>
@@ -226,7 +226,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   </div>
 
   <!-- GIST MODAL -->
-  <div id="gist-modal" class="">
+  <div id="gist-modal">
     <div class="gist-box">
       <h2><span>☁</span> Configuración GitHub Gist</h2>
       <div class="gist-field">
@@ -239,7 +239,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
         <input type="text" id="gist-id" placeholder="e.g. a1b2c3d4e5f6...">
         <div class="hint">Lo encontrarás en la URL del Gist después de crearlo.</div>
       </div>
-      <div class="gist-status show ok" id="gist-status">✓ Guardado correctamente. Gist ID: 2ac2016ff45cdec50adf1c89963fc1fb</div>
+      <div class="gist-status" id="gist-status"></div>
       <div class="gist-actions">
         <button id="gist-cancel">Cancelar</button>
         <button class="confirm" id="gist-confirm">Continuar</button>
@@ -302,13 +302,13 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 
 <div id="drag-date" style="position:fixed;background:#1e3a6e;color:#fff;font-family:'DM Mono',monospace;font-size:11px;padding:4px 9px;border-radius:5px;pointer-events:none;opacity:0;transition:opacity .08s;white-space:nowrap;z-index:200;transform:translateX(-50%);box-shadow:0 2px 8px rgba(0,0,0,.25)"></div>
 
-<div id="tooltip">
-  <div class="tt-name" id="tt-name"></div>
-  <div class="tt-row"><span>Inicio</span><span id="tt-start"></span></div>
-  <div class="tt-row"><span>Fin</span><span id="tt-end"></span></div>
-  <div class="tt-row"><span>Duración</span><span id="tt-dur"></span></div>
-  <div class="tt-row"><span>Presupuesto</span><span id="tt-budget"></span></div>
-  <div class="tt-row"><span>Estado</span><span id="tt-estado"></span></div>
+<div id="tooltip" style="left: 952px; top: 583px;" class="">
+  <div class="tt-name" id="tt-name">P4</div>
+  <div class="tt-row"><span>Inicio</span><span id="tt-start">09 oct 2026</span></div>
+  <div class="tt-row"><span>Fin</span><span id="tt-end">19 oct 2026</span></div>
+  <div class="tt-row"><span>Duración</span><span id="tt-dur">10 días</span></div>
+  <div class="tt-row"><span>Presupuesto</span><span id="tt-budget">0€</span></div>
+  <div class="tt-row"><span>Estado</span><span id="tt-estado">Pendiente</span></div>
 </div>
 
 <script>
@@ -2062,7 +2062,7 @@ setTimeout(()=>{
 // ── Carga automática desde Gist al arrancar ───────────────────────────────
 (async ()=>{
   const cfg = getGistConfig();
-  if(!cfg.token || !cfg.id) return; // sin configuración, usar datos por defecto
+  if(!cfg.id) return; // sin ID, usar datos por defecto
 
   const btn = document.getElementById('btn-gist-pull');
   const orig = btn.textContent;
@@ -2070,13 +2070,13 @@ setTimeout(()=>{
   btn.disabled = true;
 
   try{
-    const data = await gistPull(cfg.token, cfg.id);
+    // Intentar carga pública (sin token) primero
+    const data = await gistPull('', cfg.id);
     loadTasksFromData(data);
     btn.textContent = '✓ Cargado';
     btn.style.background = 'var(--green-bg)';
     btn.style.color = 'var(--green)';
   } catch(err){
-    // Si falla silenciosamente, mantener datos por defecto
     console.warn('Auto-load Gist failed:', err.message);
     btn.textContent = '✗ Sin sync';
     btn.style.background = 'var(--red-bg)';
