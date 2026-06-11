@@ -288,8 +288,11 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
           </div>
           <div class="ip-field"><label>Presupuesto (€)</label><input type="number" id="ip-budget" min="0"></div>
           <div class="ip-field" style="background:var(--surface2);border-radius:var(--radius);padding:10px">
-            <label>Duración actual</label>
-            <div style="font-family:'DM Mono',monospace;color:var(--text);font-size:14px;margin-top:4px" id="ip-duration">—</div>
+            <label>Duración (días laborables)</label>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+              <input type="number" id="ip-duration-input" min="1" max="500" step="1" style="width:70px;padding:4px 8px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'DM Mono',monospace;font-size:14px">
+              <span style="font-size:11px;color:var(--text3)">días</span>
+            </div>
           </div>
         </div>
         <div class="ip-actions">
@@ -1549,7 +1552,7 @@ function openPanel(id){
   document.getElementById('ip-progress').value = pct;
   document.getElementById('ip-progress-val').textContent = pct + '%';
   document.getElementById('ip-budget').value = t.budget;
-  document.getElementById('ip-duration').textContent = daysDiff(t.startD,t.endD)+' días';
+  document.getElementById('ip-duration-input').value = workDaysBetween(t.startD, t.endD);
   document.getElementById('info-panel').classList.add('open');
   syncLabelScroll();
   renderGantt();
@@ -1570,7 +1573,13 @@ function applyPanel(){
   if(newName)  t.name  = newName;
   if(newPhase) t.phase = newPhase;
   t.startD = parseDate(document.getElementById('ip-start').value);
-  t.endD   = parseDate(document.getElementById('ip-end').value);
+  // Si se ha modificado la duración, calcular fecha fin desde inicio + duración
+  const durVal = parseInt(document.getElementById('ip-duration-input').value);
+  if(durVal > 0){
+    t.endD = addWorkDays(t.startD, durVal);
+  } else {
+    t.endD = parseDate(document.getElementById('ip-end').value);
+  }
   t.start  = isoDate(t.startD);
   t.end    = isoDate(t.endD);
   t.estado = document.getElementById('ip-estado').value;
@@ -1591,14 +1600,21 @@ document.getElementById('ip-progress').addEventListener('input', ()=>{
 });
 
 document.getElementById('ip-start').addEventListener('change', ()=>{
-  document.getElementById('ip-duration').textContent =
-    daysDiff(parseDate(document.getElementById('ip-start').value),
-             parseDate(document.getElementById('ip-end').value)) + ' días';
+  const s = parseDate(document.getElementById('ip-start').value);
+  const e = parseDate(document.getElementById('ip-end').value);
+  document.getElementById('ip-duration-input').value = workDaysBetween(s, e);
 });
 document.getElementById('ip-end').addEventListener('change', ()=>{
-  document.getElementById('ip-duration').textContent =
-    daysDiff(parseDate(document.getElementById('ip-start').value),
-             parseDate(document.getElementById('ip-end').value)) + ' días';
+  const s = parseDate(document.getElementById('ip-start').value);
+  const e = parseDate(document.getElementById('ip-end').value);
+  document.getElementById('ip-duration-input').value = workDaysBetween(s, e);
+});
+document.getElementById('ip-duration-input').addEventListener('change', ()=>{
+  const s = parseDate(document.getElementById('ip-start').value);
+  const dur = parseInt(document.getElementById('ip-duration-input').value);
+  if(dur > 0){
+    document.getElementById('ip-end').value = isoDate(addWorkDays(s, dur));
+  }
 });
 
 // ── Stats ─────────────────────────────────────────────────────────────────
