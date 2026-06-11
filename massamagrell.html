@@ -750,12 +750,13 @@ function renderHeaders(){
   let altBg = false;
   while(wd <= range.end){
     const wx  = dateToX(wd);
-    const nwd = addDays(wd, 7);
-    const wx2 = dateToX(nwd);
+    const nwd = addDays(wd, 7); // siguiente lunes (7 días naturales)
+    const wx2 = dateToX(nwd);   // posición en días laborables
     const ww  = wx2 - wx;
 
-    // ISO week number
-    const isoWeek = getISOWeek(wd);
+    // ISO week number — usar miércoles (día central) para evitar desfases
+    const midWeek = addDays(wd, 2);
+    const isoWeek = getISOWeek(midWeek);
 
     wCtx.fillStyle = altBg ? '#dde3ee' : '#eaecf5';
     wCtx.fillRect(wx, 0, ww, 28);
@@ -765,15 +766,17 @@ function renderHeaders(){
     wCtx.lineWidth = .5;
     wCtx.beginPath(); wCtx.moveTo(wx+.5,0); wCtx.lineTo(wx+.5,28); wCtx.stroke();
 
-    // Week label: "S01" or "W01"
+    // Week label: fecha del lunes de la semana
     if(ww > 18){
       wCtx.fillStyle = '#5a6078';
       wCtx.font = '400 10px DM Mono';
       wCtx.textAlign = 'center';
       wCtx.textBaseline = 'middle';
-      const weekLabel = ww > 30
-        ? 'S' + String(isoWeek).padStart(2,'0') + (ww>50 ? ' · '+wd.getDate()+'/'+String(wd.getMonth()+1).padStart(2,'0') : '')
-        : 'S'+String(isoWeek).padStart(2,'0');
+      const isoWeek = getISOWeek(wd);
+      const dateLabel = wd.getDate()+'/'+String(wd.getMonth()+1).padStart(2,'0');
+      const weekLabel = ww > 45
+        ? 'S'+String(isoWeek).padStart(2,'0')+' '+dateLabel
+        : ww > 28 ? dateLabel : 'S'+String(isoWeek).padStart(2,'0');
       wCtx.fillText(weekLabel, wx + ww/2, 14);
     }
 
@@ -912,7 +915,7 @@ function renderGantt(){
         const isSelected = selectedIds.has(t.id);
         const isEditing  = t.id === selectedId;
         const bx = dateToX(t.startD);
-        const bw = Math.max(daysDiff(t.startD, t.endD) * DAY_W, 4);
+        const bw = Math.max(workDaysBetween(t.startD, t.endD) * DAY_W, 4);
 
         // Editing highlight: fila entera sombreada
         if(isEditing){
@@ -1038,7 +1041,7 @@ function renderGantt(){
 
         // Ghost bar showing where it will land — same height as existing bars
         const gbx = dateToX(t.startD);
-        const gbw = Math.max(daysDiff(t.startD,t.endD)*DAY_W,4);
+        const gbw = Math.max(workDaysBetween(t.startD,t.endD)*DAY_W,4);
         const gby = sy + PADDING;
         const gbh = ROW_H - PADDING*2;
         gCtx.strokeStyle = col.bar;
@@ -1148,7 +1151,7 @@ function getTaskAtY(cy){
 function getTaskInRow(row, cx){
   for(const t of row.tasks){
     const bx = dateToX(t.startD);
-    const bw = Math.max(daysDiff(t.startD,t.endD)*DAY_W,4);
+    const bw = Math.max(workDaysBetween(t.startD,t.endD)*DAY_W,4);
     if(cx>=bx && cx<=bx+bw) return t;
   }
   return null;
@@ -1159,7 +1162,7 @@ let drag = null; // {task, mode:'move'|'left'|'right', startX, origStart, origEn
 
 function getHitMode(task, cx){
   const bx = dateToX(task.startD);
-  const bw = daysDiff(task.startD, task.endD) * DAY_W;
+  const bw = workDaysBetween(task.startD, task.endD) * DAY_W;
   if(cx >= bx && cx <= bx + HANDLE_W) return 'left';
   if(cx >= bx+bw-HANDLE_W && cx <= bx+bw) return 'right';
   if(cx >= bx && cx <= bx+bw) return 'move';
@@ -1210,16 +1213,20 @@ function onMove(e){
   const ddays = Math.round(dx / DAY_W);
 
   const t = drag.task;
+  // Calcular fecha directamente desde posición X absoluta del ratón
+  const origStartX = dateToX(drag.origStart);
+  const origEndX   = dateToX(drag.origEnd);
+
   if(drag.mode === 'move'){
-    t.startD = addDays(drag.origStart, ddays);
-    t.endD   = addDays(drag.origEnd,   ddays);
+    t.startD = xToDate(origStartX + dx);
+    t.endD   = xToDate(origEndX   + dx);
   } else if(drag.mode === 'left'){
-    const newStart = addDays(drag.origStart, ddays);
-    const minEnd = addDays(drag.origEnd, -1);
+    const newStart = xToDate(origStartX + dx);
+    const minEnd   = xToDate(origEndX - DAY_W);
     t.startD = newStart < minEnd ? newStart : minEnd;
   } else if(drag.mode === 'right'){
-    const newEnd = addDays(drag.origEnd, ddays);
-    const minEnd = addDays(drag.origStart, 1);
+    const newEnd = xToDate(origEndX + dx);
+    const minEnd = xToDate(origStartX + DAY_W);
     t.endD = newEnd > minEnd ? newEnd : minEnd;
   }
 
