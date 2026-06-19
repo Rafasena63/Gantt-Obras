@@ -355,6 +355,19 @@ const HANDLE_W = 6;
 const PHASE_H = 22;
 const PADDING = 3;
 
+// Funciones de fecha — deben estar antes de la inicialización de tasks
+function isWeekend(d){ const dw=d.getDay(); return dw===0||dw===6; }
+function parseDate(s){
+  if(!s) return new Date();
+  try { const [y,m,d]=String(s).split('-').map(Number); return new Date(y,m-1,d); }
+  catch(e){ return new Date(); }
+}
+function toWorkDay(d, forward=true){
+  const r = new Date(d); r.setHours(0,0,0,0);
+  while(isWeekend(r)) r.setDate(r.getDate() + (forward?1:-1));
+  return r;
+}
+
 let tasks = RAW_TASKS.map(t=>({...t,
   startD: toWorkDay(parseDate(t.start), true),
   endD: toWorkDay(parseDate(t.end), true),
@@ -414,11 +427,6 @@ document.getElementById('btn-ungroup').addEventListener('click',()=>{
 });
 let dpr = window.devicePixelRatio || 1;
 
-function parseDate(s){ 
-  if(!s) return new Date();
-  try { const [y,m,d]=String(s).split('-').map(Number); return new Date(y,m-1,d); } 
-  catch(e){ return new Date(); }
-}
 function fmtDate(d){ return d.toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'}) }
 function isoDate(d){ return d.toISOString().slice(0,10) }
 function daysDiff(a,b){ return Math.round((b-a)/86400000) }
@@ -1093,8 +1101,7 @@ function roundRect(ctx,x,y,w,h,r){
 }
 
 // ── Coordinate helpers ────────────────────────────────────────────────────
-// ── Días laborables (L-V) ─────────────────────────────────────────────────
-function isWeekend(d){ const dw=d.getDay(); return dw===0||dw===6; }
+// ── Días laborables (L-V) — isWeekend definida arriba ────────────────────
 
 function workDaysBetween(a, b){
   if(!a || !b) return 0;
@@ -1117,12 +1124,7 @@ function addWorkDays(d, n){
   return r;
 }
 
-// Ajusta una fecha al siguiente día laborable si cae en fin de semana
-function toWorkDay(d, forward=true){
-  const r = new Date(d); r.setHours(0,0,0,0);
-  while(isWeekend(r)) r.setDate(r.getDate() + (forward?1:-1));
-  return r;
-}
+// Ajusta una fecha al siguiente día laborable si cae en fin de semana — definida arriba
 function dateToX(d){ if(!range) return 0; return workDaysBetween(range.start, d) * DAY_W; }
 function xToDate(x){ if(!range) return new Date(); return addWorkDays(range.start, Math.round(x/DAY_W)); }
 function getPhaseAtY(cy){
