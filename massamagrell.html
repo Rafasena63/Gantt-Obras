@@ -191,7 +191,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     </div>
     <div class="topbar-right">
       <span class="pill mod" id="mod-pill">● MODIFICADO</span>
-      <span id="last-saved" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap">Guardado: 19/6/2026 17:36</span>
+      <span id="last-saved" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap">Guardado: 22/6/2026 16:25</span>
       <button class="btn" id="btn-lock" title="Bloquear edición" style="font-size:13px">🔓</button>
       <button class="btn" id="btn-group" style="">⊞ Agrupar selección</button>
       <button class="btn" id="btn-ungroup" style="display: none;">⊟ Desagrupar</button>
@@ -250,7 +250,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   <div class="statsrow">
     <div class="stat"><label>Presupuesto total</label><value id="st-budget">365.000€</value></div>
     <div class="stat"><label>Coste real acumulado</label><value id="st-cost" class="amber">170.700€</value></div>
-    <div class="stat"><label>Duración total</label><value id="st-duration">292 días</value></div>
+    <div class="stat"><label>Duración total</label><value id="st-duration">293 días</value></div>
     <div class="stat"><label>Tareas completadas</label><value id="st-done" class="green">6/101</value></div>
   </div>
 
@@ -2075,6 +2075,18 @@ function loadTasksFromData(data){
   modified = false; selectedId = null; selectedIds.clear();
   document.getElementById('mod-pill').classList.remove('show');
   closePanel(); range = null; layout();
+  // En móvil el canvas necesita un resize para redibujarse correctamente
+  setTimeout(()=>{
+    window.dispatchEvent(new Event('resize'));
+    setTimeout(()=>{
+      range = null;
+      layout();
+      renderGantt();
+      syncLabelScroll();
+      const tx = dateToX(new Date());
+      document.getElementById('chart-scroll').scrollLeft = Math.max(0, tx - 200);
+    }, 200);
+  }, 100);
 }
 
 // Notificación inline para push automático
