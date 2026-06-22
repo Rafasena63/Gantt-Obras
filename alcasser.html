@@ -191,7 +191,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     </div>
     <div class="topbar-right">
       <span class="pill mod" id="mod-pill">● MODIFICADO</span>
-      <span id="last-saved" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap">Guardado: 19/6/2026 17:36</span>
+      <span id="last-saved" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap">Guardado: 22/6/2026 16:14</span>
       <button class="btn" id="btn-lock" title="Bloquear edición" style="font-size:13px">🔓</button>
       <button class="btn" id="btn-group" style="">⊞ Agrupar selección</button>
       <button class="btn" id="btn-ungroup" style="display: none;">⊟ Desagrupar</button>
@@ -250,7 +250,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   <div class="statsrow">
     <div class="stat"><label>Presupuesto total</label><value id="st-budget">0€</value></div>
     <div class="stat"><label>Coste real acumulado</label><value id="st-cost" class="amber">0€</value></div>
-    <div class="stat"><label>Duración total</label><value id="st-duration">331 días</value></div>
+    <div class="stat"><label>Duración total</label><value id="st-duration">330 días</value></div>
     <div class="stat"><label>Tareas completadas</label><value id="st-done" class="green">15/98</value></div>
   </div>
 
@@ -2075,6 +2075,8 @@ function loadTasksFromData(data){
   modified = false; selectedId = null; selectedIds.clear();
   document.getElementById('mod-pill').classList.remove('show');
   closePanel(); range = null; layout();
+  // Doble render para garantizar correcta visualización en móvil
+  setTimeout(()=>{ layout(); renderGantt(); syncLabelScroll(); }, 300);
 }
 
 // Notificación inline para push automático
