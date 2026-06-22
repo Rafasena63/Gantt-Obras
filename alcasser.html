@@ -116,6 +116,9 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   #info-panel .ip-field label{font-size:12px}
   #info-panel .save{padding:14px;font-size:15px}
 }
+/* Clase móvil forzada por JS */
+#info-panel.mobile{position:fixed!important;inset:0!important;width:100%!important;transform:translateY(100%)!important;border-left:none!important;border-top:1px solid var(--border);z-index:200!important}
+#info-panel.mobile.open{transform:translateY(0)!important}
 .ip-field label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:4px}
 .ip-field input,.ip-field select{width:100%;padding:6px 10px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-size:12px;font-family:'DM Sans',sans-serif}
 .ip-field input:focus,.ip-field select:focus{outline:none;border-color:var(--green-dim)}
@@ -201,7 +204,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     </div>
     <div class="topbar-right">
       <span class="pill mod" id="mod-pill">● MODIFICADO</span>
-      <span id="last-saved" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap">Guardado: 22/6/2026 16:57</span>
+      <span id="last-saved" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap">Guardado: 22/6/2026 16:59</span>
       <button class="btn" id="btn-lock" title="Bloquear edición" style="font-size:13px">🔓</button>
       <button class="btn" id="btn-group" style="">⊞ Agrupar selección</button>
       <button class="btn" id="btn-ungroup" style="display: none;">⊟ Desagrupar</button>
@@ -279,7 +282,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   </div>
 </div>
 
-<div id="info-panel">
+<div id="info-panel" class="">
   <div class="ip-head">
     <h3 id="ip-task-name">—</h3>
     <button class="ip-close" id="ip-close">✕</button>
@@ -2155,6 +2158,15 @@ document.getElementById('gist-confirm').addEventListener('click', async ()=>{
     btn.textContent = 'Continuar';
     btn.disabled = false;
   }
+});
+
+// Detectar móvil y aplicar clase mobile al panel
+function isMobile(){ return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.innerWidth < 1024; }
+if(isMobile()) document.getElementById('info-panel').classList.add('mobile');
+window.addEventListener('resize', ()=>{
+  const panel = document.getElementById('info-panel');
+  if(isMobile()) panel.classList.add('mobile');
+  else panel.classList.remove('mobile');
 });
 
 // ── Init ──────────────────────────────────────────────────────────────────
