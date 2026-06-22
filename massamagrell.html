@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
+<html lang="es"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gantt Interactivo – Massamagrell</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -100,7 +99,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 #tooltip .tt-row span:last-child{color:var(--text);font-family:'DM Mono',monospace;font-size:11px}
 
 /* INFO PANEL */
-#info-panel{position:absolute;right:0;top:0;bottom:0;width:240px;background:var(--surface);border-left:1px solid var(--border);transform:translateX(100%);transition:transform .2s;z-index:10;display:flex;flex-direction:column;overflow:hidden}
+#info-panel{position:fixed;right:0;top:0;bottom:0;width:240px;background:var(--surface);border-left:1px solid var(--border);transform:translateX(100%);transition:transform .2s;z-index:100;display:flex;flex-direction:column;overflow:hidden}
 #info-panel.open{transform:translateX(0)}
 #info-panel .ip-head{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
 #info-panel .ip-head h3{flex:1;font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -108,7 +107,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 #info-panel .ip-close:hover{color:var(--text);background:var(--surface2)}
 #info-panel .ip-body{padding:16px;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
 @media (max-width: 768px){
-  #info-panel{position:fixed;inset:0;width:100%;transform:translateY(100%);transition:transform .25s;z-index:100;border-left:none;border-top:1px solid var(--border)}
+  #info-panel{position:fixed;inset:0;width:100%;transform:translateY(100%);transition:transform .25s;z-index:200;border-left:none;border-top:1px solid var(--border)}
   #info-panel.open{transform:translateY(0)}
   #info-panel .ip-body{padding:20px;gap:16px}
   #info-panel .ip-head{padding:16px 20px}
@@ -165,16 +164,16 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 <body>
 <div id="app">
   <!-- PIN MODAL -->
-  <div id="pin-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;display:none;align-items:center;justify-content:center">
+  <div id="pin-modal" style="position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.7); z-index: 999; display: none; align-items: center; justify-content: center;">
     <div style="background:var(--surface);border-radius:14px;padding:32px 28px;width:300px;box-shadow:0 12px 40px rgba(0,0,0,.4);display:flex;flex-direction:column;align-items:center;gap:16px">
       <div style="font-size:22px">🔒</div>
       <div style="font-size:14px;font-weight:600;color:var(--text)">Acceso protegido</div>
       <div style="font-size:11px;color:var(--text3)">Introduce el PIN de 4 dígitos</div>
       <div style="display:flex;gap:10px" id="pin-dots">
-        <div class="pin-dot" id="pd0"></div>
-        <div class="pin-dot" id="pd1"></div>
-        <div class="pin-dot" id="pd2"></div>
-        <div class="pin-dot" id="pd3"></div>
+        <div class="pin-dot filled" id="pd0"></div>
+        <div class="pin-dot filled" id="pd1"></div>
+        <div class="pin-dot filled" id="pd2"></div>
+        <div class="pin-dot filled" id="pd3"></div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:180px">
         <button class="pin-btn" data-n="1">1</button>
@@ -202,22 +201,22 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     </div>
     <div class="topbar-right">
       <span class="pill mod" id="mod-pill">● MODIFICADO</span>
-      <span id="last-saved" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap"></span>
-      <button class="btn" id="btn-lock" title="Bloquear/Desbloquear edición" style="font-size:13px">🔒</button>
-      <button class="btn" id="btn-group">⊞ Agrupar selección</button>
-      <button class="btn" id="btn-ungroup" style="display:none">⊟ Desagrupar</button>
-      <button class="btn" id="btn-reset">Restablecer todo</button>
-      <button class="btn" id="btn-import">↑ Cargar JSON</button>
-      <button class="btn primary" id="btn-export">↓ Guardar JSON</button>
-      <button class="btn gist-up" id="btn-gist-push">☁ Subir a Gist</button>
-      <button class="btn" id="btn-gist-pull">☁ Cargar desde Gist</button>
-      <button class="btn" id="btn-gh-deploy" style="background:var(--surface2);border-color:#6e40c9;color:#a371f7">⬆ Publicar en GitHub</button>
+      <span id="last-saved" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap">Guardado: 22/6/2026 16:48</span>
+      <button class="btn" id="btn-lock" title="Bloquear edición" style="font-size:13px">🔓</button>
+      <button class="btn" id="btn-group" style="">⊞ Agrupar selección</button>
+      <button class="btn" id="btn-ungroup" style="display: none;">⊟ Desagrupar</button>
+      <button class="btn" id="btn-reset" style="">Restablecer todo</button>
+      <button class="btn" id="btn-import" style="">↑ Cargar JSON</button>
+      <button class="btn primary" id="btn-export" style="">↓ Guardar JSON</button>
+      <button class="btn gist-up" id="btn-gist-push" style="">☁ Subir a Gist</button>
+      <button class="btn" id="btn-gist-pull" style="">☁ Cargar desde Gist</button>
+      <button class="btn" id="btn-gh-deploy" style="background: var(--surface2); border-color: rgb(110, 64, 201); color: rgb(163, 113, 247);">⬆ Publicar en GitHub</button>
       <input type="file" id="file-input" accept=".json" style="display:none">
     </div>
   </div>
 
   <!-- GITHUB DEPLOY MODAL -->
-  <div id="gh-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s">
+  <div id="gh-modal" style="position: fixed; inset: 0px; background: rgba(0, 0, 0, 0.4); z-index: 200; display: flex; align-items: center; justify-content: center; opacity: 1; pointer-events: all; transition: opacity 0.2s;">
     <div style="background:var(--surface);border-radius:10px;padding:24px;width:380px;box-shadow:0 8px 32px rgba(0,0,0,.2);display:flex;flex-direction:column;gap:14px">
       <h2 style="font-size:14px;font-weight:600;color:var(--text)">⬆ Publicar en GitHub</h2>
       <div>
@@ -226,31 +225,31 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
       </div>
       <div style="font-size:10px;color:var(--text3);background:var(--surface2);border-radius:var(--radius);padding:8px 10px;line-height:1.6">
         Repositorio: <strong style="color:var(--text)">rafasena63/Gantt-Obras</strong><br>
-        Archivo: <strong id="gh-filename" style="color:var(--text)">—</strong>
+        Archivo: <strong id="gh-filename" style="color:var(--text)">massamagrell.html</strong>
       </div>
-      <div id="gh-status" style="font-size:11px;padding:6px 10px;border-radius:var(--radius);display:none"></div>
+      <div id="gh-status" style="font-size: 11px; padding: 6px 10px; border-radius: var(--radius); display: block; background: var(--green-bg); color: var(--green-dim);">Subiendo archivo a GitHub…</div>
       <div style="display:flex;gap:8px">
         <button id="gh-cancel" style="flex:1;padding:8px;border-radius:var(--radius);border:1px solid var(--border2);background:transparent;color:var(--text2);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">Cancelar</button>
-        <button id="gh-confirm" style="flex:1;padding:8px;border-radius:var(--radius);border:1px solid #6e40c9;background:rgba(110,64,201,.15);color:#a371f7;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif">Publicar</button>
+        <button id="gh-confirm" style="flex:1;padding:8px;border-radius:var(--radius);border:1px solid #6e40c9;background:rgba(110,64,201,.15);color:#a371f7;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif" disabled="">Publicando…</button>
       </div>
     </div>
   </div>
 
   <!-- GIST MODAL -->
-  <div id="gist-modal">
+  <div id="gist-modal" class="">
     <div class="gist-box">
       <h2><span>☁</span> Configuración GitHub Gist</h2>
       <div class="gist-field">
         <label>Personal Access Token</label>
         <input type="password" id="gist-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-        <div class="hint">Necesita permiso <strong>gist</strong>. <a href="https://github.com/settings/tokens/new?scopes=gist&description=Gantt+Torre+Ponent" target="_blank">Crear token aquí →</a></div>
+        <div class="hint">Necesita permiso <strong>gist</strong>. <a href="https://github.com/settings/tokens/new?scopes=gist&amp;description=Gantt+Torre+Ponent" target="_blank">Crear token aquí →</a></div>
       </div>
       <div class="gist-field">
         <label>Gist ID <span style="color:var(--text3);font-weight:400">(vacío = crear nuevo)</span></label>
         <input type="text" id="gist-id" placeholder="e.g. a1b2c3d4e5f6...">
         <div class="hint">Lo encontrarás en la URL del Gist después de crearlo.</div>
       </div>
-      <div class="gist-status" id="gist-status"></div>
+      <div class="gist-status show ok" id="gist-status">✓ Guardado correctamente. Gist ID: 7f69f952f4640f192f98460905732e42</div>
       <div class="gist-actions">
         <button id="gist-cancel">Cancelar</button>
         <button class="confirm" id="gist-confirm">Continuar</button>
@@ -259,62 +258,61 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
   </div>
 
   <div class="statsrow">
-    <div class="stat"><label>Presupuesto total</label><value id="st-budget">—</value></div>
-    <div class="stat"><label>Coste real acumulado</label><value id="st-cost" class="amber">—</value></div>
-    <div class="stat"><label>Duración total</label><value id="st-duration">—</value></div>
-    <div class="stat"><label>Tareas completadas</label><value id="st-done" class="green">—</value></div>
+    <div class="stat"><label>Presupuesto total</label><value id="st-budget">365.000€</value></div>
+    <div class="stat"><label>Coste real acumulado</label><value id="st-cost" class="amber">170.700€</value></div>
+    <div class="stat"><label>Duración total</label><value id="st-duration">294 días</value></div>
+    <div class="stat"><label>Tareas completadas</label><value id="st-done" class="green">6/101</value></div>
   </div>
 
   <div class="gantt-wrap">
     <div class="label-panel">
       <div class="label-header"><span>Fase</span></div>
-      <div class="label-scroll" id="label-scroll"></div>
+      <div class="label-scroll" id="label-scroll"><div class="phase-label" style="height: 22px;"><span style="flex: 1 1 0%;">CIMENTACIÓN</span><button class="arr-btn" title="Subir fase">↑</button><button class="arr-btn" title="Bajar fase">↓</button><button class="add-btn" title="Añadir tarea en Cimentación">+</button><button class="del-btn" title="Eliminar fase Cimentación" style="opacity: 1; margin-left: 2px;">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">3 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="phase-label" style="height: 22px;"><span style="flex: 1 1 0%;">ESTRUCTURA</span><button class="arr-btn" title="Subir fase">↑</button><button class="arr-btn" title="Bajar fase">↓</button><button class="add-btn" title="Añadir tarea en Estructura">+</button><button class="del-btn" title="Eliminar fase Estructura" style="opacity: 1; margin-left: 2px;">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">7 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="phase-label" style="height: 22px;"><span style="flex: 1 1 0%;">VENTILACION</span><button class="arr-btn" title="Subir fase">↑</button><button class="arr-btn" title="Bajar fase">↓</button><button class="add-btn" title="Añadir tarea en VENTILACION">+</button><button class="del-btn" title="Eliminar fase VENTILACION" style="opacity: 1; margin-left: 2px;">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><span style="width: 6px; height: 6px; border-radius: 50%; background: rgb(196, 125, 10); flex-shrink: 0; margin-right: 4px;"></span><input type="text" title="Editar nombre" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); min-width: 0px; cursor: pointer;"><span class="badge" style="background: rgb(254, 243, 224); color: rgb(158, 100, 8); margin-left: 2px; flex-shrink: 0;">0%</span><span class="arr-wrap"><button class="arr-btn" title="Subir tarea">↑</button><button class="arr-btn" title="Bajar tarea">↓</button></span><button class="del-btn" title="Eliminar tarea">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><span style="width: 6px; height: 6px; border-radius: 50%; background: rgb(196, 125, 10); flex-shrink: 0; margin-right: 4px;"></span><input type="text" title="Editar nombre" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); min-width: 0px; cursor: pointer;"><span class="badge" style="background: rgb(254, 243, 224); color: rgb(158, 100, 8); margin-left: 2px; flex-shrink: 0;">0%</span><span class="arr-wrap"><button class="arr-btn" title="Subir tarea">↑</button><button class="arr-btn" title="Bajar tarea">↓</button></span><button class="del-btn" title="Eliminar tarea">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><span style="width: 6px; height: 6px; border-radius: 50%; background: rgb(196, 125, 10); flex-shrink: 0; margin-right: 4px;"></span><input type="text" title="Editar nombre" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); min-width: 0px; cursor: pointer;"><span class="badge" style="background: rgb(254, 243, 224); color: rgb(158, 100, 8); margin-left: 2px; flex-shrink: 0;">0%</span><span class="arr-wrap"><button class="arr-btn" title="Subir tarea">↑</button><button class="arr-btn" title="Bajar tarea">↓</button></span><button class="del-btn" title="Eliminar tarea">×</button></div><div class="phase-label" style="height: 22px;"><span style="flex: 1 1 0%;">FACHADA</span><button class="arr-btn" title="Subir fase">↑</button><button class="arr-btn" title="Bajar fase">↓</button><button class="add-btn" title="Añadir tarea en FACHADA">+</button><button class="del-btn" title="Eliminar fase FACHADA" style="opacity: 1; margin-left: 2px;">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">3 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="phase-label" style="height: 22px;"><span style="flex: 1 1 0%;">INTERIOR VIVIENDAS</span><button class="arr-btn" title="Subir fase">↑</button><button class="arr-btn" title="Bajar fase">↓</button><button class="add-btn" title="Añadir tarea en INTERIOR VIVIENDAS">+</button><button class="del-btn" title="Eliminar fase INTERIOR VIVIENDAS" style="opacity: 1; margin-left: 2px;">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><input type="text" title="Editar nombre del grupo" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); font-weight: 500; min-width: 0px; cursor: pointer;"><span class="badge" style="background: var(--surface3); color: var(--text2); margin-left: 4px; flex-shrink: 0;">4 tareas</span><span class="arr-wrap"><button class="arr-btn" title="Subir grupo">↑</button><button class="arr-btn" title="Bajar grupo">↓</button></span><button class="del-btn" title="Eliminar grupo">×</button></div><div class="phase-label" style="height: 22px;"><span style="flex: 1 1 0%;">ZONAS COMUNES</span><button class="arr-btn" title="Subir fase">↑</button><button class="arr-btn" title="Bajar fase">↓</button><button class="add-btn" title="Añadir tarea en ZONAS COMUNES">+</button><button class="del-btn" title="Eliminar fase ZONAS COMUNES" style="opacity: 1; margin-left: 2px;">×</button></div><div class="task-label" style="height: 28px; min-height: 28px; padding: 0px 4px 0px 10px; display: flex; align-items: center;"><span style="width: 6px; height: 6px; border-radius: 50%; background: rgb(196, 125, 10); flex-shrink: 0; margin-right: 4px;"></span><input type="text" title="Editar nombre" style="flex: 1 1 0%; background: transparent; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; outline: none; font-size: 11px; font-family: &quot;DM Sans&quot;, sans-serif; color: var(--text2); min-width: 0px; cursor: pointer;"><span class="badge" style="background: rgb(254, 243, 224); color: rgb(158, 100, 8); margin-left: 2px; flex-shrink: 0;">0%</span><span class="arr-wrap"><button class="arr-btn" title="Subir tarea">↑</button><button class="arr-btn" title="Bajar tarea">↓</button></span><button class="del-btn" title="Eliminar tarea">×</button></div><div style="display: flex; align-items: center; gap: 6px; padding: 5px 10px; cursor: pointer; color: var(--text3); font-size: 10px; border-top: 1px solid var(--border); transition: background 0.15s;"><span style="font-size:13px;line-height:1">+</span><span>Nueva fase</span></div></div>
     </div>
     <div class="chart-panel" id="chart-panel">
-      <div class="chart-header"><canvas id="header-canvas"></canvas></div>
-      <div class="chart-subheader"><canvas id="week-canvas"></canvas></div>
+      <div class="chart-header" style="overflow-x: hidden;"><canvas id="header-canvas" width="2346" height="56" style="width: 2346px; height: 56px;"></canvas></div>
+      <div class="chart-subheader" style="overflow-x: hidden;"><canvas id="week-canvas" width="2346" height="28" style="width: 2346px; height: 28px;"></canvas></div>
       <div class="chart-scroll" id="chart-scroll">
-        <canvas id="gantt-canvas"></canvas>
-      </div>
-      <div id="info-panel">
-        <div class="ip-head">
-          <h3 id="ip-task-name">—</h3>
-          <button class="ip-close" id="ip-close">✕</button>
-        </div>
-        <div class="ip-body">
-          <div class="ip-field"><label>Nombre de tarea</label><input type="text" id="ip-name" placeholder="Nombre de la tarea"></div>
-          <div class="ip-field"><label>Fase / Partida</label><input type="text" id="ip-phase" placeholder="Nombre de la fase"></div>
-          <div class="ip-field"><label>Inicio</label><input type="date" id="ip-start"></div>
-          <div class="ip-field"><label>Fin</label><input type="date" id="ip-end"></div>
-          <div class="ip-field"><label>Estado</label>
-            <select id="ip-estado">
-              <option>Completado</option><option>En curso</option>
-              <option>Pendiente</option><option>Riesgo</option>
-            </select>
-          </div>
-          <div class="ip-field">
-            <label>Progreso — <span id="ip-progress-val" style="color:var(--text);font-family:'DM Mono',monospace">0%</span></label>
-            <input type="range" id="ip-progress" min="0" max="100" step="1" style="width:100%;accent-color:var(--green);margin-top:4px">
-          </div>
-          <div class="ip-field"><label>Presupuesto (€)</label><input type="number" id="ip-budget" min="0"></div>
-          <div class="ip-field" style="background:var(--surface2);border-radius:var(--radius);padding:10px">
-            <label>Duración (días laborables)</label>
-            <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
-              <input type="number" id="ip-duration-input" min="1" max="500" step="1" style="width:70px;padding:4px 8px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'DM Mono',monospace;font-size:14px">
-              <span style="font-size:11px;color:var(--text3)">días</span>
-            </div>
-          </div>
-        </div>
-        <div class="ip-actions">
-          <button onclick="closePanel()">Cancelar</button>
-          <button class="save" onclick="applyPanel()">Aplicar</button>
-        </div>
+        <canvas id="gantt-canvas" width="2346" height="916" style="width: 2346px; height: 916px; cursor: default;"></canvas>
       </div>
     </div>
   </div>
 </div>
 
-<div id="drag-date" style="position:fixed;background:#1e3a6e;color:#fff;font-family:'DM Mono',monospace;font-size:11px;padding:4px 9px;border-radius:5px;pointer-events:none;opacity:0;transition:opacity .08s;white-space:nowrap;z-index:200;transform:translateX(-50%);box-shadow:0 2px 8px rgba(0,0,0,.25)"></div>
+<div id="info-panel">
+  <div class="ip-head">
+    <h3 id="ip-task-name">—</h3>
+    <button class="ip-close" id="ip-close">✕</button>
+  </div>
+  <div class="ip-body">
+    <div class="ip-field"><label>Nombre de tarea</label><input type="text" id="ip-name" placeholder="Nombre de la tarea"></div>
+    <div class="ip-field"><label>Fase / Partida</label><input type="text" id="ip-phase" placeholder="Nombre de la fase"></div>
+    <div class="ip-field"><label>Inicio</label><input type="date" id="ip-start"></div>
+    <div class="ip-field"><label>Fin</label><input type="date" id="ip-end"></div>
+    <div class="ip-field"><label>Estado</label>
+      <select id="ip-estado">
+        <option>Completado</option><option>En curso</option>
+        <option>Pendiente</option><option>Riesgo</option>
+      </select>
+    </div>
+    <div class="ip-field">
+      <label>Progreso — <span id="ip-progress-val" style="color:var(--text);font-family:'DM Mono',monospace">0%</span></label>
+      <input type="range" id="ip-progress" min="0" max="100" step="1" style="width:100%;accent-color:var(--green);margin-top:4px">
+    </div>
+    <div class="ip-field"><label>Presupuesto (€)</label><input type="number" id="ip-budget" min="0"></div>
+    <div class="ip-field" style="background:var(--surface2);border-radius:var(--radius);padding:10px">
+      <label>Duración (días laborables)</label>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+        <input type="number" id="ip-duration-input" min="1" max="500" step="1" style="width:70px;padding:4px 8px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:'DM Mono',monospace;font-size:14px">
+        <span style="font-size:11px;color:var(--text3)">días</span>
+      </div>
+    </div>
+  </div>
+  <div class="ip-actions">
+    <button onclick="closePanel()">Cancelar</button>
+    <button class="save" onclick="applyPanel()">Aplicar</button>
+  </div>
+</div> style="position:fixed;background:#1e3a6e;color:#fff;font-family:'DM Mono',monospace;font-size:11px;padding:4px 9px;border-radius:5px;pointer-events:none;opacity:0;transition:opacity .08s;white-space:nowrap;z-index:200;transform:translateX(-50%);box-shadow:0 2px 8px rgba(0,0,0,.25)"&gt;
 
 <div id="tooltip">
   <div class="tt-name" id="tt-name"></div>
@@ -2194,5 +2192,6 @@ setTimeout(()=>{
   }
 })();
 </script>
-</body>
-</html>
+
+
+</body></html>
