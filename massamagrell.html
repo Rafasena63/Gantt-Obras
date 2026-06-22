@@ -204,7 +204,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     </div>
     <div class="topbar-right">
       <span class="pill mod" id="mod-pill">● MODIFICADO</span>
-      <span id="last-saved" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap">Guardado: 22/6/2026 17:22</span>
+      <span id="last-saved" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap">Guardado: 22/6/2026 17:27</span>
       <button class="btn" id="btn-lock" title="Bloquear edición" style="font-size:13px">🔓</button>
       <button class="btn" id="btn-group" style="">⊞ Agrupar selección</button>
       <button class="btn" id="btn-ungroup" style="display: none;">⊟ Desagrupar</button>
@@ -1594,12 +1594,21 @@ function openPanel(id){
   if(applyBtn){ applyBtn.disabled = isCompleted; applyBtn.style.opacity = isCompleted ? '0.4' : ''; }
   document.getElementById('info-panel').dataset.locked = isCompleted ? '1' : '0';
 
-  // Forzar pantalla completa en móvil directamente con style
+  // Forzar pantalla completa en pantallas pequeñas
   const panel = document.getElementById('info-panel');
-  if(isMobile()){
-    panel.style.cssText = 'position:fixed!important;top:0;left:0;right:0;bottom:0;width:100%;height:100%;transform:none;z-index:9999;display:flex;flex-direction:column;background:var(--surface);overflow:hidden;border-left:none;border-top:1px solid var(--border)';
+  const isSmall = window.screen.width < 1400 || window.screen.height < 900;
+  if(isSmall){
+    panel.style.position = 'fixed';
+    panel.style.top = '0';
+    panel.style.left = '0';
+    panel.style.right = '0';
+    panel.style.bottom = '0';
+    panel.style.width = '100%';
+    panel.style.height = '100%';
+    panel.style.zIndex = '9999';
+    panel.style.transform = 'none';
+    panel.style.borderLeft = 'none';
   }
-
   panel.classList.add('open');
   syncLabelScroll();
   renderGantt();
@@ -1608,7 +1617,16 @@ function openPanel(id){
 function closePanel(){
   const panel = document.getElementById('info-panel');
   panel.classList.remove('open');
-  if(isMobile()) panel.style.cssText = '';
+  panel.style.position = '';
+  panel.style.top = '';
+  panel.style.left = '';
+  panel.style.right = '';
+  panel.style.bottom = '';
+  panel.style.width = '';
+  panel.style.height = '';
+  panel.style.zIndex = '';
+  panel.style.transform = '';
+  panel.style.borderLeft = '';
   selectedId = null;
   syncLabelScroll();
   renderGantt();
