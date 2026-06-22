@@ -204,7 +204,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
     </div>
     <div class="topbar-right">
       <span class="pill mod" id="mod-pill">● MODIFICADO</span>
-      <span id="last-saved" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap">Guardado: 22/6/2026 17:27</span>
+      <span id="last-saved" style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;white-space:nowrap">Guardado: 22/6/2026 17:32</span>
       <button class="btn" id="btn-lock" title="Bloquear edición" style="font-size:13px">🔓</button>
       <button class="btn" id="btn-group" style="">⊞ Agrupar selección</button>
       <button class="btn" id="btn-ungroup" style="display: none;">⊟ Desagrupar</button>
@@ -1203,6 +1203,17 @@ function getCanvasXY(e){
 
 ganttCanvas.addEventListener('mousedown', onDown);
 ganttCanvas.addEventListener('touchstart', onDown, {passive:false});
+// En móvil, un tap corto abre el panel directamente
+ganttCanvas.addEventListener('touchend', e=>{
+  if(!isMobile()) return;
+  e.preventDefault();
+  const touch = e.changedTouches[0];
+  const {x,y} = getCanvasXY({clientX:touch.clientX, clientY:touch.clientY});
+  const row = getTaskAtY(y);
+  if(!row) return;
+  const task = getTaskInRow(row, x);
+  if(task) openPanel(task.id);
+}, {passive:false});
 
 function onDown(e){
   if(!isUnlocked) return;
@@ -1544,6 +1555,9 @@ function updateCursor(e){
 }
 
 // ── Tooltip ───────────────────────────────────────────────────────────────
+// En móvil ocultar tooltip completamente
+if(isMobile()) document.getElementById('tooltip').style.display = 'none';
+
 const tooltip = document.getElementById('tooltip');
 ganttCanvas.addEventListener('mousemove', e=>{
   if(drag) return;
